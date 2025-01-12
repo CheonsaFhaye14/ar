@@ -10,6 +10,7 @@
     <script src="https://cdn.jsdelivr.net/gh/jeromeetienne/AR.js/aframe/build/aframe-ar.js"></script>
   </head>
   <body style="margin: 0; overflow: hidden;">
+
     <!-- A-Frame AR Scene -->
     <a-scene embedded arjs>
       <!-- Marker to trigger AR -->
@@ -20,6 +21,10 @@
 
       <!-- Camera for AR -->
       <a-entity camera></a-entity>
+
+      <!-- Enable touch events for mobile interaction -->
+      <a-entity touch-controls="rotateEnabled: true; pinchEnabled: true;"></a-entity>
     </a-scene>
+
   </body>
 </html>
