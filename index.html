@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui" />
     <title>AR QR Code</title>
     <!-- Include A-Frame library -->
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
@@ -10,19 +10,42 @@
     <script src="https://cdn.jsdelivr.net/gh/jeromeetienne/AR.js/aframe/build/aframe-ar.js"></script>
   </head>
   <body style="margin: 0; overflow: hidden;">
-
     <!-- A-Frame AR Scene -->
     <a-scene embedded arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false; markerResolutionMode: 2;">
       <!-- Marker to trigger AR -->
       <a-marker preset="hiro">
-        <!-- 3D object to display on the marker, simpler object for better performance -->
+        <!-- 3D object to display on the marker -->
         <a-box position="0 0.5 0" rotation="0 45 0" color="blue" scale="0.5 0.5 0.5"></a-box>
       </a-marker>
 
       <!-- Camera for AR, adjusted for mobile -->
       <a-entity camera position="0 0 4" look-controls="enabled: true" touch-controls="enabled: true"></a-entity>
-
     </a-scene>
+
+    <!-- Full-Screen button for mobile (optional) -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        if (document.documentElement.requestFullscreen) {
+          let fullscreenButton = document.createElement("button");
+          fullscreenButton.innerText = "Enter Immersive Mode";
+          fullscreenButton.style.position = "absolute";
+          fullscreenButton.style.bottom = "10px";
+          fullscreenButton.style.left = "50%";
+          fullscreenButton.style.transform = "translateX(-50%)";
+          fullscreenButton.style.padding = "10px 20px";
+          fullscreenButton.style.fontSize = "16px";
+          fullscreenButton.style.backgroundColor = "#007bff";
+          fullscreenButton.style.color = "#fff";
+          fullscreenButton.style.border = "none";
+          fullscreenButton.style.borderRadius = "5px";
+          fullscreenButton.style.cursor = "pointer";
+          fullscreenButton.onclick = function () {
+            document.documentElement.requestFullscreen();
+          };
+          document.body.appendChild(fullscreenButton);
+        }
+      });
+    </script>
 
   </body>
 </html>
