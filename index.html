@@ -4,19 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AR Eagle on Head</title>
-    
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <!-- A-Frame for WebXR support -->
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     
-    <!-- Three.js (needed for 3D objects) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
     <!-- TensorFlow.js -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-landmarks-detection"></script>
 </head>
 <body style="margin: 0; overflow: hidden;">
-
     <a-scene embedded>
         <!-- Set up the camera for face tracking -->
         <a-camera id="camera" position="0 0 0" look-controls="enabled: false"></a-camera>
@@ -28,11 +24,11 @@
         <a-light type="directional" position="5 10 3"></a-light>
 
         <!-- The eagle model -->
-        <a-entity id="eagle" gltf-model="url(Gila.glb)" position="0 0 0" scale="0.3 0.3 0.3"></a-entity>
+        <a-entity id="eagle" gltf-model="url(Gila.glb)" position="0 1 0" scale="0.3 0.3 0.3"></a-entity>
+
     </a-scene>
 
     <script>
-        const video = document.createElement("video");
         const eagleEntity = document.getElementById('eagle');
 
         async function setupFaceTracking() {
@@ -40,6 +36,7 @@
             const model = await faceLandmarksDetection.load(faceLandmarksDetection.SupportedPackages.mediapipeFacemesh);
 
             // Set up webcam stream
+            const video = document.createElement("video");
             const stream = await navigator.mediaDevices.getUserMedia({ video: true });
             video.srcObject = stream;
             video.play();
@@ -47,7 +44,7 @@
             const detector = model.createDetector();
 
             // Run the face detection in a loop
-            function detectFace() {
+            async function detectFace() {
                 const predictions = await detector.estimateFaces({
                     input: video,
                 });
