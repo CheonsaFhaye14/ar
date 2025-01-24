@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Camera Feed with Frame</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script> <!-- A-Frame Library for AR -->
     <style>
         body, html {
             margin: 0;
@@ -35,12 +36,28 @@
             transform: scaleX(-1); /* Mirror the video */
             object-fit: cover;
         }
+        
+        /* Add style for AR container */
+        #ar-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
     </style>
 </head>
 <body>
     <!-- Image added at the top center -->
     <img id="top-image" src="467368665_2265331637167167_3396521272798109453_n.jpg" alt="Top Image">
-<br><br>
+
+    <!-- A-Frame scene for AR -->
+    <a-scene embedded arjs>
+        <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+        <!-- The eagle model, replace 'path/to/eagle.glb' with the actual path to your eagle model -->
+        <a-entity gltf-model="url('Gila.glb')" scale="0.3 0.3 0.3" position="0 1.5 0"></a-entity>
+    </a-scene>
+
     <video id="video" autoplay muted></video>
 
     <script>
