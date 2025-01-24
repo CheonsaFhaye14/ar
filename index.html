@@ -12,11 +12,11 @@
             padding: 0;
             height: 100%;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            justify-content: flex-start;
             align-items: center;
             background-color: #ffffff; /* Set background to white */
             position: relative;
-            flex-direction: column;
         }
 
         #top-image {
@@ -30,8 +30,8 @@
 
         #video {
             width: 90%; /* Increase width to make it bigger */
-            height: 80%;
-            max-width: 600px; /* Increase max-width for larger size */
+            height: 70%; /* Make video feed take up a larger portion */
+            max-width: 600px; /* Max width for larger size */
             border: 5px solid #333;
             border-radius: 10px;
             transform: scaleX(-1); /* Mirror the video */
@@ -58,7 +58,7 @@
         <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
         <!-- The eagle model, replace 'path/to/eagle.glb' with the actual path to your eagle model -->
-        <a-entity gltf-model="url('eagle.glb')" scale="0.3 0.3 0.3" position="0 1.5 0"></a-entity>
+        <a-entity gltf-model="url('Gila.glb')" scale="0.3 0.3 0.3" position="0 1.5 0"></a-entity>
     </a-scene>
 
     <video id="video" autoplay muted></video>
