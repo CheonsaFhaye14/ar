@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Camera Feed with Frame</title>
+    <title>Camera Feed with AR Eagle</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script> <!-- A-Frame Library for AR -->
     <style>
@@ -29,8 +29,10 @@
         }
 
         #video {
+            position: absolute;
+            bottom: 10%; /* Place camera feed just below the image */
             width: 90%; /* Increase width to make it bigger */
-            height: 70%; /* Make video feed take up a larger portion */
+            height: 70%;
             max-width: 600px; /* Max width for larger size */
             border: 5px solid #333;
             border-radius: 10px;
@@ -39,13 +41,13 @@
             z-index: 1; /* Ensure the video is below the image */
         }
 
-        /* Add style for AR container */
+        /* Remove VR camera and make the AR element visible */
         #ar-container {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            z-index: 1; /* Ensure AR model is below the image */
+            z-index: 1;
         }
     </style>
 </head>
@@ -53,12 +55,12 @@
     <!-- Image added at the top center -->
     <img id="top-image" src="467368665_2265331637167167_3396521272798109453_n.jpg" alt="Top Image">
 
-    <!-- A-Frame scene for AR -->
-    <a-scene embedded arjs>
-        <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+    <!-- A-Frame scene for AR (without VR features) -->
+    <a-scene embedded>
+        <a-camera position="0 0 0" look-controls="enabled: false"></a-camera> <!-- No VR camera control -->
 
-        <!-- The eagle model, replace 'path/to/eagle.glb' with the actual path to your eagle model -->
-        <a-entity gltf-model="url('Gila.glb')" scale="0.3 0.3 0.3" position="0 1.5 0"></a-entity>
+        <!-- The eagle model, replace 'Gila.glb' with the actual path to your eagle model -->
+        <a-entity id="eagle" gltf-model="url('Gila.glb')" scale="0.3 0.3 0.3" position="0 1.5 0"></a-entity>
     </a-scene>
 
     <video id="video" autoplay muted></video>
