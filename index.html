@@ -4,37 +4,72 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AR Eagle on Head</title>
-
+    
     <!-- A-Frame for WebXR support -->
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     
-    <!-- AR.js for AR functionality -->
-    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
-
     <!-- Three.js (needed for 3D objects) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- TensorFlow.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-landmarks-detection"></script>
 </head>
 <body style="margin: 0; overflow: hidden;">
 
-    <a-scene embedded arjs>
-        <!-- Set up the camera and AR markers -->
-        <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+    <a-scene embedded>
+        <!-- Set up the camera for face tracking -->
+        <a-camera id="camera" position="0 0 0" look-controls="enabled: false"></a-camera>
 
-        <!-- Marker for detecting user's head -->
-        <a-marker preset="hiro">
-            <!-- The eagle 3D model that will appear on the user's head -->
-            <a-entity 
-                position="0 0.5 0"
-                scale="0.3 0.3 0.3"
-                rotation="0 180 0"
-                gltf-model="url(path_to_eagle_model.glb)">
-            </a-entity>
-        </a-marker>
-
-        <!-- The background and lighting -->
-        <a-light type="directional" position="5 10 3"></a-light>
+        <!-- Background -->
         <a-sky color="#ECECEC"></a-sky>
+
+        <!-- Lighting -->
+        <a-light type="directional" position="5 10 3"></a-light>
+
+        <!-- The eagle model -->
+        <a-entity id="eagle" gltf-model="url(Gila.glb)" position="0 0 0" scale="0.3 0.3 0.3"></a-entity>
     </a-scene>
 
+    <script>
+        const video = document.createElement("video");
+        const eagleEntity = document.getElementById('eagle');
+
+        async function setupFaceTracking() {
+            // Load the face landmark detection model
+            const model = await faceLandmarksDetection.load(faceLandmarksDetection.SupportedPackages.mediapipeFacemesh);
+
+            // Set up webcam stream
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            video.srcObject = stream;
+            video.play();
+
+            const detector = model.createDetector();
+
+            // Run the face detection in a loop
+            function detectFace() {
+                const predictions = await detector.estimateFaces({
+                    input: video,
+                });
+
+                if (predictions.length > 0) {
+                    const face = predictions[0];
+                    const noseTip = face.keypoints.find(point => point.name === 'nose_tip');
+
+                    // Position the eagle on top of the nose (which is close to the head's center)
+                    if (noseTip) {
+                        const position = noseTip;
+                        eagleEntity.setAttribute('position', `${position.x} ${position.y + 0.1} ${position.z}`);
+                    }
+                }
+
+                requestAnimationFrame(detectFace);
+            }
+
+            detectFace();
+        }
+
+        setupFaceTracking();
+    </script>
 </body>
 </html>
