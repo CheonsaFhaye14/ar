@@ -3,50 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Camera Feed with AR Eagle</title>
+    <title>AR with Eagle</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <script src="https://cdn.jsdelivr.net/npm/aframe@1.2.0/dist/aframe.min.js"></script> <!-- A-Frame Library -->
-    <script src="https://cdn.jsdelivr.net/npm/ar.js@2.2.0/aframe/build/aframe-ar.js"></script> <!-- AR.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ar.js@3.3.2/aframe/build/aframe-ar.js"></script>
     <style>
         body, html {
             margin: 0;
             padding: 0;
             height: 100%;
+            background-color: #ffffff;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            background-color: #ffffff;
         }
 
         #top-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 2;
             position: absolute;
-            top: 10%;
+        }
+
+        #arButton {
+            position: absolute;
+            bottom: 10%;
             left: 50%;
             transform: translateX(-50%);
-            width: 150px;
-            z-index: 2; /* Image stays on top */
-        }
-
-        #video {
-            position: absolute;
-            bottom: 0;
-            width: 90%;
-            height: 70%;
-            max-width: 600px;
-            border: 5px solid #333;
-            border-radius: 10px;
-            transform: scaleX(-1); /* Mirroring the camera feed */
-            object-fit: cover;
-            z-index: 1;
-            display: none; /* Initially hidden */
-        }
-
-        #toggleButton {
-            position: absolute;
-            bottom: 5%;
             padding: 10px 20px;
-            font-size: 16px;
+            font-size: 18px;
             background-color: #333;
             color: white;
             border: none;
@@ -55,48 +41,62 @@
             z-index: 3;
         }
 
-        #toggleButton:hover {
+        #arButton:hover {
             background-color: #555;
         }
 
-        a-scene {
+        #arScene {
+            display: none;
             width: 100%;
             height: 100%;
             position: absolute;
             top: 0;
             left: 0;
+            z-index: 1;
         }
+
+        #video-container {
+            display: none;
+        }
+
     </style>
 </head>
 <body>
+    <!-- Image as the first screen -->
     <img id="top-image" src="467368665_2265331637167167_3396521272798109453_n.jpg" alt="Top Image">
-    <video id="video" autoplay muted></video>
-    <button id="toggleButton" onclick="toggleCamera()">Start AR</button>
 
-    <!-- A-Frame AR scene -->
-    <a-scene embedded arjs>
-        <!-- Eagle model using the raw URL -->
+    <!-- Button to activate camera and AR -->
+    <button id="arButton" onclick="startAR()">Start Camera</button>
+
+    <!-- AR.js and Three.js AR Scene -->
+    <a-scene id="arScene" embedded arjs="sourceType: webcam; debugUIEnabled: false; trackingMethod: best;">
+        <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
         <a-entity gltf-model="url('https://github.com/CheonsaFhaye14/ar/raw/refs/heads/main/eagle.glb')" scale="1 1 1" position="0 1.5 0"></a-entity>
     </a-scene>
 
+    <!-- Video container for webcam feed (hidden by default) -->
+    <div id="video-container">
+        <video id="video" autoplay muted></video>
+    </div>
+
     <script>
         // Access the webcam and display the feed
-        async function startCamera() {
+        async function startAR() {
+            // Hide the first image and button
+            document.getElementById('top-image').style.display = 'none';
+            document.getElementById('arButton').style.display = 'none';
+            // Show the AR scene
+            document.getElementById('arScene').style.display = 'block';
+
+            // Start the camera feed
             const videoElement = document.getElementById('video');
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true });
                 videoElement.srcObject = stream;
-                videoElement.style.display = "block"; // Show the video after the camera is started
+                document.getElementById('video-container').style.display = 'block';
             } catch (err) {
                 console.error("Error accessing webcam:", err);
             }
-        }
-
-        // Toggle button visibility and start AR
-        function toggleCamera() {
-            const button = document.getElementById('toggleButton');
-            button.style.display = "none"; // Hide the button after it is clicked
-            startCamera(); // Start camera feed when the button is clicked
         }
     </script>
 </body>
