@@ -49,20 +49,40 @@
             transform: translate(-50%, -50%);
             z-index: 1;
         }
+
+        /* Button styling */
+        #toggleButton {
+            position: absolute;
+            bottom: 5%;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        #toggleButton:hover {
+            background-color: #555;
+        }
     </style>
 </head>
 <body>
     <!-- Image added at the top center -->
     <img id="top-image" src="467368665_2265331637167167_3396521272798109453_n.jpg" alt="Top Image">
 
-    <!-- A-Frame scene for AR (without VR features) -->
-    <a-scene embedded>
+    <!-- A-Frame scene for AR (no VR controls) -->
+    <a-scene embedded vr-mode-ui="enabled: false">
+        <!-- Camera entity (no VR mode) -->
         <a-camera position="0 0 0" look-controls="enabled: false"></a-camera> <!-- No VR camera control -->
 
-        <!-- The eagle model, now using the updated raw URL -->
+        <!-- The eagle model, using the updated raw URL -->
         <a-entity id="eagle" gltf-model="url('https://github.com/CheonsaFhaye14/ar/raw/refs/heads/main/eagle.glb')" scale="1 1 1" position="0 1.5 0"></a-entity>
     </a-scene>
 
+    <!-- Video for webcam -->
     <video id="video" autoplay muted></video>
 
     <script>
@@ -78,7 +98,7 @@
             }
         }
 
-        // Start the camera when the page loads
+        // Start the camera automatically when the page loads
         startCamera();
     </script>
 </body>
