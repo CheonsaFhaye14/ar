@@ -35,13 +35,9 @@
             z-index: 1;
         }
 
-        /* AR model container styling */
-        #ar-container {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 3;
+        /* Ensure video is fully stretched and used in the background */
+        #video {
+            display: none; /* Hide the video element itself */
         }
 
     </style>
@@ -54,9 +50,8 @@
     <a-scene embedded vr-mode-ui="enabled: false">
         <!-- Camera with webcam feed directly attached -->
         <a-camera id="camera" position="0 0 0" look-controls="enabled: false">
-            <a-entity camera="active: true" gps-camera="max-distance: 10; min-distance: 1" 
-                      position="0 0 0">
-                <a-video src="#video" width="16" height="9" position="0 0 0"></a-video>
+            <a-entity camera="active: true" position="0 0 0">
+                <a-video id="video" src="#video" width="16" height="9" position="0 0 0"></a-video>
             </a-entity>
         </a-camera>
 
@@ -65,19 +60,14 @@
     </a-scene>
 
     <!-- Video for webcam -->
-    <video id="video" autoplay muted style="display:none"></video>
+    <video id="videoElement" autoplay muted></video>
 
     <script>
         // Access the webcam and display the feed
         async function startCamera() {
-            const videoElement = document.getElementById('video');
+            const videoElement = document.getElementById('videoElement');
             const stream = await navigator.mediaDevices.getUserMedia({ video: true });
             videoElement.srcObject = stream;
-
-            // Set the camera stream as texture for the AR scene
-            const cameraEntity = document.querySelector('a-entity[camera]');
-            const videoTexture = new THREE.VideoTexture(videoElement);
-            cameraEntity.setAttribute('material', 'src', videoTexture);
         }
 
         // Start the camera automatically when the page loads
