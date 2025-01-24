@@ -59,8 +59,8 @@
     <a-scene embedded>
         <a-camera position="0 0 0" look-controls="enabled: false"></a-camera> <!-- No VR camera control -->
 
-        <!-- The eagle model, replace 'Gila.glb' with the actual path to your eagle model -->
-        <a-entity id="eagle" gltf-model="url('Gila.glb')" scale="0.3 0.3 0.3" position="0 1.5 0"></a-entity>
+        <!-- The eagle model, now using the updated raw URL -->
+        <a-entity id="eagle" gltf-model="url('https://github.com/CheonsaFhaye14/ar/raw/refs/heads/main/eagle.glb')" scale="1 1 1" position="0 1.5 0"></a-entity>
     </a-scene>
 
     <video id="video" autoplay muted></video>
