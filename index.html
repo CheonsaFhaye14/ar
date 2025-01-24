@@ -12,90 +12,72 @@
             padding: 0;
             height: 100%;
             display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
+            justify-content: center;
             align-items: center;
-            background-color: #ffffff; /* Set background to white */
+            background-color: #ffffff;
             position: relative;
         }
 
         #top-image {
             position: absolute;
-            top: 10px; /* Adjust top to fit */
+            top: 10px;
             left: 50%;
             transform: translateX(-50%);
-            width: 150px; /* Adjust size */
-            z-index: 2; /* Ensure the image stays on top */
+            width: 150px;
+            z-index: 2;
         }
 
-        #video {
+        /* Styling for the A-Frame scene to make sure it takes full screen */
+        a-scene {
             position: absolute;
-            bottom: 10%; /* Place camera feed just below the image */
-            width: 90%; /* Increase width to make it bigger */
-            height: 70%;
-            max-width: 600px; /* Max width for larger size */
-            border: 5px solid #333;
-            border-radius: 10px;
-            transform: scaleX(-1); /* Mirror the video */
-            object-fit: cover;
-            z-index: 1; /* Ensure the video is below the image */
+            width: 100%;
+            height: 100%;
+            z-index: 1;
         }
 
-        /* Remove VR camera and make the AR element visible */
+        /* AR model container styling */
         #ar-container {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            z-index: 1;
+            z-index: 3;
         }
 
-        /* Button styling */
-        #toggleButton {
-            position: absolute;
-            bottom: 5%;
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #333;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            z-index: 2;
-        }
-
-        #toggleButton:hover {
-            background-color: #555;
-        }
     </style>
 </head>
 <body>
     <!-- Image added at the top center -->
     <img id="top-image" src="467368665_2265331637167167_3396521272798109453_n.jpg" alt="Top Image">
 
-    <!-- A-Frame scene for AR (no VR controls) -->
+    <!-- A-Frame scene for AR -->
     <a-scene embedded vr-mode-ui="enabled: false">
-        <!-- Camera entity (no VR mode) -->
-        <a-camera position="0 0 0" look-controls="enabled: false"></a-camera> <!-- No VR camera control -->
+        <!-- Camera with webcam feed directly attached -->
+        <a-camera id="camera" position="0 0 0" look-controls="enabled: false">
+            <a-entity camera="active: true" gps-camera="max-distance: 10; min-distance: 1" 
+                      position="0 0 0">
+                <a-video src="#video" width="16" height="9" position="0 0 0"></a-video>
+            </a-entity>
+        </a-camera>
 
-        <!-- The eagle model, using the updated raw URL -->
+        <!-- AR Eagle model -->
         <a-entity id="eagle" gltf-model="url('https://github.com/CheonsaFhaye14/ar/raw/refs/heads/main/eagle.glb')" scale="1 1 1" position="0 1.5 0"></a-entity>
     </a-scene>
 
     <!-- Video for webcam -->
-    <video id="video" autoplay muted></video>
+    <video id="video" autoplay muted style="display:none"></video>
 
     <script>
         // Access the webcam and display the feed
         async function startCamera() {
             const videoElement = document.getElementById('video');
-            
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                videoElement.srcObject = stream;
-            } catch (err) {
-                console.error("Error accessing webcam:", err);
-            }
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            videoElement.srcObject = stream;
+
+            // Set the camera stream as texture for the AR scene
+            const cameraEntity = document.querySelector('a-entity[camera]');
+            const videoTexture = new THREE.VideoTexture(videoElement);
+            cameraEntity.setAttribute('material', 'src', videoTexture);
         }
 
         // Start the camera automatically when the page loads
