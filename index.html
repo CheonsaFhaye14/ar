@@ -1,51 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui" />
-    <title>AR QR Code</title>
-    <!-- Include A-Frame library -->
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <!-- Include AR.js library for AR support -->
-    <script src="https://cdn.jsdelivr.net/gh/jeromeetienne/AR.js/aframe/build/aframe-ar.js"></script>
-  </head>
-  <body style="margin: 0; overflow: hidden;">
-    <!-- A-Frame AR Scene -->
-    <a-scene embedded arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false; markerResolutionMode: 2;">
-      <!-- Marker to trigger AR -->
-      <a-marker preset="hiro">
-        <!-- 3D object to display on the marker -->
-        <a-box position="0 0.5 0" rotation="0 45 0" color="blue" scale="0.5 0.5 0.5"></a-box>
-      </a-marker>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR Eagle on Head</title>
 
-      <!-- Camera for AR, adjusted for mobile -->
-      <a-entity camera position="0 0 4" look-controls="enabled: true" touch-controls="enabled: true"></a-entity>
+    <!-- A-Frame for WebXR support -->
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    
+    <!-- AR.js for AR functionality -->
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
+
+    <!-- Three.js (needed for 3D objects) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body style="margin: 0; overflow: hidden;">
+
+    <a-scene embedded arjs>
+        <!-- Set up the camera and AR markers -->
+        <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+        <!-- Marker for detecting user's head -->
+        <a-marker preset="hiro">
+            <!-- The eagle 3D model that will appear on the user's head -->
+            <a-entity 
+                position="0 0.5 0"
+                scale="0.3 0.3 0.3"
+                rotation="0 180 0"
+                gltf-model="url(path_to_eagle_model.glb)">
+            </a-entity>
+        </a-marker>
+
+        <!-- The background and lighting -->
+        <a-light type="directional" position="5 10 3"></a-light>
+        <a-sky color="#ECECEC"></a-sky>
     </a-scene>
 
-    <!-- Full-Screen button for mobile (optional) -->
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        if (document.documentElement.requestFullscreen) {
-          let fullscreenButton = document.createElement("button");
-          fullscreenButton.innerText = "Enter Immersive Mode";
-          fullscreenButton.style.position = "absolute";
-          fullscreenButton.style.bottom = "10px";
-          fullscreenButton.style.left = "50%";
-          fullscreenButton.style.transform = "translateX(-50%)";
-          fullscreenButton.style.padding = "10px 20px";
-          fullscreenButton.style.fontSize = "16px";
-          fullscreenButton.style.backgroundColor = "#007bff";
-          fullscreenButton.style.color = "#fff";
-          fullscreenButton.style.border = "none";
-          fullscreenButton.style.borderRadius = "5px";
-          fullscreenButton.style.cursor = "pointer";
-          fullscreenButton.onclick = function () {
-            document.documentElement.requestFullscreen();
-          };
-          document.body.appendChild(fullscreenButton);
-        }
-      });
-    </script>
-
-  </body>
+</body>
 </html>
