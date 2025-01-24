@@ -16,14 +16,16 @@
             align-items: center;
             background-color: #ffffff; /* Set background to white */
             position: relative;
+            flex-direction: column;
         }
 
         #top-image {
             position: absolute;
-            top: 0%;
+            top: 10px; /* Adjust top to fit */
             left: 50%;
             transform: translateX(-50%);
             width: 150px; /* Adjust size */
+            z-index: 2; /* Ensure the image stays on top */
         }
 
         #video {
@@ -32,17 +34,18 @@
             max-width: 600px; /* Increase max-width for larger size */
             border: 5px solid #333;
             border-radius: 10px;
-            top: 30%;
             transform: scaleX(-1); /* Mirror the video */
             object-fit: cover;
+            z-index: 1; /* Ensure the video is below the image */
         }
-        
+
         /* Add style for AR container */
         #ar-container {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            z-index: 1; /* Ensure AR model is below the image */
         }
     </style>
 </head>
@@ -55,7 +58,7 @@
         <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
         <!-- The eagle model, replace 'path/to/eagle.glb' with the actual path to your eagle model -->
-        <a-entity gltf-model="url('Gila.glb')" scale="0.3 0.3 0.3" position="0 1.5 0"></a-entity>
+        <a-entity gltf-model="url('eagle.glb')" scale="0.3 0.3 0.3" position="0 1.5 0"></a-entity>
     </a-scene>
 
     <video id="video" autoplay muted></video>
