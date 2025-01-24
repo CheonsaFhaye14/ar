@@ -18,60 +18,114 @@
             position: relative;
         }
 
+        /* Fullscreen image styling */
         #top-image {
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 150px;
-            z-index: 2;
-        }
-
-        /* Styling for the A-Frame scene to make sure it takes full screen */
-        a-scene {
-            position: absolute;
             width: 100%;
             height: 100%;
+            object-fit: cover;
+            z-index: 2;
+            position: absolute;
+        }
+
+        /* Button to activate AR */
+        #arButton {
+            position: absolute;
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 3;
+        }
+
+        #arButton:hover {
+            background-color: #555;
+        }
+
+        /* Hide the AR scene by default */
+        #arScene {
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
             z-index: 1;
         }
 
-        /* Ensure video is fully stretched and used in the background */
-        #video {
-            display: none; /* Hide the video element itself */
+        /* Video container for webcam feed (hidden by default) */
+        #video-container {
+            display: none;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 50%;
+            z-index: 1;
         }
 
+        #video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 5px solid #333;
+        }
     </style>
 </head>
 <body>
-    <!-- Image added at the top center -->
+    <!-- Image as the first screen -->
     <img id="top-image" src="467368665_2265331637167167_3396521272798109453_n.jpg" alt="Top Image">
 
-    <!-- A-Frame scene for AR -->
-    <a-scene embedded vr-mode-ui="enabled: false">
-        <!-- Camera with webcam feed directly attached -->
-        <a-camera id="camera" position="0 0 0" look-controls="enabled: false">
-            <a-entity camera="active: true" position="0 0 0">
-                <a-video id="video" src="#video" width="16" height="9" position="0 0 0"></a-video>
-            </a-entity>
-        </a-camera>
+    <!-- Button to activate AR -->
+    <button id="arButton">Activate AR</button>
+
+    <!-- Video container for webcam feed -->
+    <div id="video-container">
+        <video id="video" autoplay muted></video>
+    </div>
+
+    <!-- A-Frame AR scene (hidden initially) -->
+    <a-scene id="arScene" embedded arjs="sourceType: webcam; debugUIEnabled: false; trackingMethod: best;">
+        <!-- Camera for AR -->
+        <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
         <!-- AR Eagle model -->
         <a-entity id="eagle" gltf-model="url('https://github.com/CheonsaFhaye14/ar/raw/refs/heads/main/eagle.glb')" scale="1 1 1" position="0 1.5 0"></a-entity>
     </a-scene>
 
-    <!-- Video for webcam -->
-    <video id="videoElement" autoplay muted></video>
-
     <script>
         // Access the webcam and display the feed
         async function startCamera() {
-            const videoElement = document.getElementById('videoElement');
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-            videoElement.srcObject = stream;
+            const videoElement = document.getElementById('video');
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                videoElement.srcObject = stream;
+            } catch (err) {
+                console.error("Error accessing webcam:", err);
+            }
         }
 
-        // Start the camera automatically when the page loads
-        startCamera();
+        // Function to show AR scene and camera feed
+        function activateAR() {
+            // Hide the image and button
+            document.getElementById('top-image').style.display = 'none';
+            document.getElementById('arButton').style.display = 'none';
+
+            // Show the AR scene and webcam feed
+            document.getElementById('arScene').style.display = 'block';
+            document.getElementById('video-container').style.display = 'block';
+
+            // Start the camera
+            startCamera();
+        }
+
+        // Add event listener to activate AR on button click
+        document.getElementById('arButton').addEventListener('click', activateAR);
     </script>
 </body>
 </html>
